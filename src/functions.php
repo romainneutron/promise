@@ -12,7 +12,7 @@ function resolve($promiseOrValue = null)
         $canceller = null;
 
         if (method_exists($promiseOrValue, 'cancel')) {
-            $canceller = [$promiseOrValue, 'cancel'];
+            $canceller = array($promiseOrValue, 'cancel');
         }
 
         return new Promise(function ($resolve, $reject, $notify) use ($promiseOrValue) {
