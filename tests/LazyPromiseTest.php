@@ -8,7 +8,7 @@ class LazyPromiseTest extends TestCase
 {
     use PromiseTest\FullTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
+    public function getPromiseTestAdapter($canceller = null)
     {
         $d = new Deferred($canceller);
 

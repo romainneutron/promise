@@ -10,7 +10,7 @@ class Deferred implements PromisorInterface
     private $notifyCallback;
     private $canceller;
 
-    public function __construct(callable $canceller = null)
+    public function __construct($canceller = null)
     {
         $this->canceller = $canceller;
     }
@@ -18,10 +18,12 @@ class Deferred implements PromisorInterface
     public function promise()
     {
         if (null === $this->promise) {
-            $this->promise = new Promise(function ($resolve, $reject, $notify) {
-                $this->resolveCallback = $resolve;
-                $this->rejectCallback  = $reject;
-                $this->notifyCallback  = $notify;
+            $that = $this;
+
+            $this->promise = new Promise(function ($resolve, $reject, $notify) use ($that) {
+                $that->resolveCallback = $resolve;
+                $that->rejectCallback  = $reject;
+                $that->notifyCallback  = $notify;
             }, $this->canceller);
         }
 

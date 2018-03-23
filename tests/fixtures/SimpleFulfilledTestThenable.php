@@ -4,7 +4,7 @@ namespace React\Promise;
 
 class SimpleFulfilledTestThenable
 {
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function then($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         try {
             if ($onFulfilled) {

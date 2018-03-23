@@ -7,32 +7,32 @@ class LazyPromise implements ExtendedPromiseInterface, CancellablePromiseInterfa
     private $factory;
     private $promise;
 
-    public function __construct(callable $factory)
+    public function __construct($factory)
     {
         $this->factory = $factory;
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function then($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         return $this->promise()->then($onFulfilled, $onRejected, $onProgress);
     }
 
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function done($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         return $this->promise()->done($onFulfilled, $onRejected, $onProgress);
     }
 
-    public function otherwise(callable $onRejected)
+    public function otherwise($onRejected)
     {
         return $this->promise()->otherwise($onRejected);
     }
 
-    public function always(callable $onFulfilledOrRejected)
+    public function always($onFulfilledOrRejected)
     {
         return $this->promise()->always($onFulfilledOrRejected);
     }
 
-    public function progress(callable $onProgress)
+    public function progress($onProgress)
     {
         return $this->promise()->progress($onProgress);
     }

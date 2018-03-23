@@ -15,7 +15,7 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         $this->reason = $reason;
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function then($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         if (null === $onRejected) {
             return $this;
@@ -30,7 +30,7 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         }
     }
 
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function done($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         if (null === $onRejected) {
             throw UnhandledRejectionException::resolve($this->reason);
@@ -47,7 +47,7 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         }
     }
 
-    public function otherwise(callable $onRejected)
+    public function otherwise($onRejected)
     {
         if (!_checkTypehint($onRejected, $this->reason)) {
             return $this;
@@ -56,7 +56,7 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         return $this->then(null, $onRejected);
     }
 
-    public function always(callable $onFulfilledOrRejected)
+    public function always($onFulfilledOrRejected)
     {
         return $this->then(null, function ($reason) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($reason) {
@@ -65,7 +65,7 @@ class RejectedPromise implements ExtendedPromiseInterface, CancellablePromiseInt
         });
     }
 
-    public function progress(callable $onProgress)
+    public function progress($onProgress)
     {
         return $this;
     }

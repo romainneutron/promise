@@ -5,7 +5,7 @@ namespace React\Promise;
 class CancellationQueue
 {
     private $started = false;
-    private $queue = [];
+    private $queue = array();
 
     public function __invoke()
     {
@@ -50,6 +50,6 @@ class CancellationQueue
             }
         }
 
-        $this->queue = [];
+        $this->queue = array();
     }
 }

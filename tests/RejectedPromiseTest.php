@@ -9,7 +9,7 @@ class RejectedPromiseTest extends TestCase
     use PromiseTest\PromiseSettledTestTrait,
         PromiseTest\PromiseRejectedTestTrait;
 
-    public function getPromiseTestAdapter(callable $canceller = null)
+    public function getPromiseTestAdapter($canceller = null)
     {
         $promise = null;
 

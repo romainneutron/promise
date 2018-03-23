@@ -7,7 +7,7 @@ trait PromiseSettledTestTrait
     /**
      * @return \React\Promise\PromiseAdapter\PromiseAdapterInterface
      */
-    abstract public function getPromiseTestAdapter(callable $canceller = null);
+    abstract public function getPromiseTestAdapter($canceller = null);
 
     /** @test */
     public function thenShouldReturnAPromiseForSettledPromise()

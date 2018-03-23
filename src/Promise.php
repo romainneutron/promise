@@ -7,19 +7,19 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
     private $canceller;
     private $result;
 
-    private $handlers = [];
-    private $progressHandlers = [];
+    private $handlers = array();
+    private $progressHandlers = array();
 
     private $requiredCancelRequests = 0;
     private $cancelRequests = 0;
 
-    public function __construct(callable $resolver, callable $canceller = null)
+    public function __construct($resolver, $canceller = null)
     {
         $this->canceller = $canceller;
         $this->call($resolver);
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function then($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         if (null !== $this->result) {
             return $this->result->then($onFulfilled, $onRejected, $onProgress);
@@ -31,16 +31,18 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
         $this->requiredCancelRequests++;
 
-        return new static($this->resolver($onFulfilled, $onRejected, $onProgress), function () {
-            if (++$this->cancelRequests < $this->requiredCancelRequests) {
+        $that = $this;
+
+        return new static($this->resolver($onFulfilled, $onRejected, $onProgress), function () use ($that) {
+            if (++$that->cancelRequests < $that->requiredCancelRequests) {
                 return;
             }
 
-            $this->cancel();
+            $that->cancel();
         });
     }
 
-    public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    public function done($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         if (null !== $this->result) {
             return $this->result->done($onFulfilled, $onRejected, $onProgress);
@@ -56,7 +58,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         }
     }
 
-    public function otherwise(callable $onRejected)
+    public function otherwise($onRejected)
     {
         return $this->then(null, function ($reason) use ($onRejected) {
             if (!_checkTypehint($onRejected, $reason)) {
@@ -67,7 +69,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         });
     }
 
-    public function always(callable $onFulfilledOrRejected)
+    public function always($onFulfilledOrRejected)
     {
         return $this->then(function ($value) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($value) {
@@ -80,7 +82,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         });
     }
 
-    public function progress(callable $onProgress)
+    public function progress($onProgress)
     {
         return $this->then(null, null, $onProgress);
     }
@@ -97,7 +99,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         $this->call($canceller);
     }
 
-    private function resolver(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
+    private function resolver($onFulfilled = null, $onRejected = null, $onProgress = null)
     {
         return function ($resolve, $reject, $notify) use ($onFulfilled, $onRejected, $onProgress) {
             if ($onProgress) {
@@ -159,7 +161,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
         $handlers = $this->handlers;
 
-        $this->progressHandlers = $this->handlers = [];
+        $this->progressHandlers = $this->handlers = array();
         $this->result = $promise;
 
         foreach ($handlers as $handler) {
@@ -193,17 +195,18 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         return $promise;
     }
 
-    private function call(callable $callback)
+    private function call($callback)
     {
         try {
+            $that = $this;
             $callback(
-                function ($value = null) {
+                function ($value = null) use ($that) {
                     $this->resolve($value);
                 },
-                function ($reason = null) {
+                function ($reason = null) use ($that) {
                     $this->reject($reason);
                 },
-                function ($update = null) {
+                function ($update = null) use ($that) {
                     $this->notify($update);
                 }
             );
